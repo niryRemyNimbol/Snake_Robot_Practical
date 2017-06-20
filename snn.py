@@ -32,3 +32,8 @@ def snn(xmax, ymax, rmax):
     return snn
 
 def events_generator(dvsEventsList):
+    times = dvsEventsList[0]
+    indices = dvsEventsList[1]
+    N = len(dvsEventsList)
+    
+    return brian2.SpikeGeneratorGroup(N, indices, times)
