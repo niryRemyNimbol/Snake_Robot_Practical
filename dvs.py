@@ -11,7 +11,9 @@ import sys
 import time
 import numpy
 import snn
-vrep.simxStart
+import brian2
+import matplotlib.pyplot as plt
+
 
 # Clean up all previous communication threads
 vrep.simxFinish(-1) 
@@ -44,6 +46,16 @@ time.sleep(1)
 
 errorCode, dvsSignal = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_opmode_buffer)
 dvsSignalArray = vrep.simxUnpackInts(dvsSignal)
-dvsEventsList = numpy.reshape(dvsSignalArray, [len(dvsSignalArray)/4, 4])
+dvsEventsList = numpy.reshape(dvsSignalArray, [int(len(dvsSignalArray)/4), 4]).T
 
-snn = snn.snn(128, 128, 64)
+nn = snn.snn(64, 64, 32)
+events, times, indices = snn.events_generator(nn, dvsEventsList)
+s = snn.link_event_to_snn(events, nn)
+
+M = brian2.StateMonitor(nn, 'v', record=True)
+SpikeM = brian2.SpikeMonitor(events)
+network = brian2.Network(brian2.collect())
+network.add(M, SpikeM)
+
+#brian2.defaultclock.dt = 10 * brian2.ms
+network.run(200*brian2.ms)
