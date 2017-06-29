@@ -48,14 +48,17 @@ errorCode, dvsSignal = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_
 dvsSignalArray = vrep.simxUnpackInts(dvsSignal)
 dvsEventsList = numpy.reshape(dvsSignalArray, [int(len(dvsSignalArray)/4), 4]).T
 
-nn = snn.snn(64, 64, 32)
+# Create the spiking neural network for circle detection and the event generator and link them
+nn = snn.snn(32, 32, 16)
 events, times, indices = snn.events_generator(nn, dvsEventsList)
 s = snn.link_event_to_snn(events, nn)
 
+# Aquire the event outputs as well as the potential evolution in the network
 M = brian2.StateMonitor(nn, 'v', record=True)
-SpikeM = brian2.SpikeMonitor(events)
+SpikeM1 = brian2.SpikeMonitor(events)
+SpikeM2 = brian2.SpikeMonitor(nn)
 network = brian2.Network(brian2.collect())
-network.add(M, SpikeM)
+network.add(M, SpikeM1, SpikeM2)
 
-#brian2.defaultclock.dt = 10 * brian2.ms
-network.run(200*brian2.ms)
+# Run the network
+network.run(500*brian2.ms)
