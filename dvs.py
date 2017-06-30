@@ -61,4 +61,7 @@ network = brian2.Network(brian2.collect())
 network.add(M, SpikeM1, SpikeM2)
 
 # Run the network
-network.run(500*brian2.ms)
+network.run(1000*brian2.ms)
+spikes_n = numpy.array(SpikeM2.i)
+spikes_e = numpy.array(SpikeM1.i)
+t = numpy.array(SpikeM2.t)

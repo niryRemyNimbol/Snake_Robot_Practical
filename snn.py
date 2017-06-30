@@ -18,7 +18,7 @@ def snn(xmax, ymax, rmax):
     # Neuron parameters
     N = xmax * ymax * rmax #size
     # Equation parameters
-    tau = 500 * brian2.ms 
+    tau = 200 * brian2.ms 
     v0 = 1 * brian2.mvolt
     vth = 50*v0 #potential threshold
     eqs = '''
@@ -69,7 +69,7 @@ def link_event_to_snn(events, snn):
     rmax = int(numpy.max(snn.r))    
     xmax = int(numpy.max(snn.x) + 1)
     ymax = int(numpy.max(snn.y) + 1)
-    v_update = 0.5 * brian2.mvolt
+    v_update = 0.2 * brian2.mvolt
 
     indices = events.indices[:]
     xc = indices%xmax
@@ -84,7 +84,7 @@ def link_event_to_snn(events, snn):
             if(x0+r<xmax and x0-r>=0 and y0+r<ymax and y0-r>=0):
                 x, y = solve_centers(x0 ,y0 , r)
                 synapses.connect(i=index, j=rmax*x+xmax*rmax*y+r-1)
-                print(x, y, xc[index], yc[index], r)
+                #print(x, y, xc[index], yc[index], r)
     N = len(synapses)
     synapses.v_update = v_update * numpy.ones((1, N))
     
