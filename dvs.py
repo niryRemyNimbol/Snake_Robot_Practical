@@ -13,6 +13,7 @@ import numpy
 import snn
 import brian2
 import matplotlib.pyplot as plt
+import display
 
 
 # Clean up all previous communication threads
@@ -54,14 +55,15 @@ events, times, indices = snn.events_generator(nn, dvsEventsList)
 s = snn.link_event_to_snn(events, nn)
 
 # Aquire the event outputs as well as the potential evolution in the network
-M = brian2.StateMonitor(nn, 'v', record=True)
-SpikeM1 = brian2.SpikeMonitor(events)
+#M = brian2.StateMonitor(nn, 'v', record=True)
+#SpikeM1 = brian2.SpikeMonitor(events)
 SpikeM2 = brian2.SpikeMonitor(nn)
 network = brian2.Network(brian2.collect())
-network.add(M, SpikeM1, SpikeM2)
+#network.add(M, SpikeM1, SpikeM2)
+network.add(SpikeM2)
 
 # Run the network
 network.run(1000*brian2.ms)
 spikes_n = numpy.array(SpikeM2.i)
-spikes_e = numpy.array(SpikeM1.i)
+#spikes_e = numpy.array(SpikeM1.i)
 t = numpy.array(SpikeM2.t)

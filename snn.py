@@ -18,9 +18,9 @@ def snn(xmax, ymax, rmax):
     # Neuron parameters
     N = xmax * ymax * rmax #size
     # Equation parameters
-    tau = 200 * brian2.ms 
+    tau = 500 * brian2.ms 
     v0 = 1 * brian2.mvolt
-    vth = 50*v0 #potential threshold
+    vth = 20*v0 #potential threshold
     eqs = '''
     dv/dt = -(v0/tau)*sign(v) : volt (unless refractory)
     x : 1
@@ -78,11 +78,12 @@ def link_event_to_snn(events, snn):
     synapses = brian2.Synapses(events, snn, model='v_update : volt', on_pre='v += v_update')
     
     for index in range(len(indices)):
-        for r in range(1, rmax+1, 1):
+        for r in range(1, rmax+1, 5):
             x0 = xc[index]
             y0 = yc[index]
             if(x0+r<xmax and x0-r>=0 and y0+r<ymax and y0-r>=0):
                 x, y = solve_centers(x0 ,y0 , r)
+                #print(rmax*x+xmax*rmax*y+r-1)
                 synapses.connect(i=index, j=rmax*x+xmax*rmax*y+r-1)
                 #print(x, y, xc[index], yc[index], r)
     N = len(synapses)
@@ -99,15 +100,59 @@ def solve_centers(xc, yc, r):
     next_px = x[-1] + 1
     next_py = y[-1]
     C = int(numpy.ceil(2*numpy.pi*r))
-    for k in range(C):
+    for k in range(C//4):
         x = numpy.append(x, next_px)
         y = numpy.append(y, next_py)
         last_x = x[-1]
         last_y = y[-1]
-        next_x = numpy.array([last_x, last_x + 1, last_x + 1, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
+        next_x = numpy.array([last_x, last_x - 1, last_x - 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
+        next_y = numpy.array([last_y - 1, last_y - 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
         next_x = (next_x >= 0) * next_x
-        next_y = numpy.array([last_y + 1, last_y + 1, last_y, last_y - 1, last_y - 1, last_y - 1, last_y, last_y + 1])
         next_y = (next_y >= 0) * next_y
+        #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
+        #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
+        i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
+        next_px = next_x[i_next]
+        next_py = next_y[i_next]
+    for k in range(C//4):
+        x = numpy.append(x, next_px)
+        y = numpy.append(y, next_py)
+        last_x = x[-1]
+        last_y = y[-1]
+        next_x = numpy.array([last_x, last_x - 1, last_x - 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
+        next_y = numpy.array([last_y + 1, last_y + 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
+        next_x = (next_x >= 0) * next_x
+        next_y = (next_y >= 0) * next_y
+        #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
+        #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
+        i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
+        next_px = next_x[i_next]
+        next_py = next_y[i_next]
+    for k in range(C//4):
+        x = numpy.append(x, next_px)
+        y = numpy.append(y, next_py)
+        last_x = x[-1]
+        last_y = y[-1]
+        next_x = numpy.array([last_x, last_x + 1, last_x + 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
+        next_y = numpy.array([last_y + 1, last_y + 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
+        next_x = (next_x >= 0) * next_x
+        next_y = (next_y >= 0) * next_y
+        #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
+        #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
+        i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
+        next_px = next_x[i_next]
+        next_py = next_y[i_next]
+    for k in range(C//4):
+        x = numpy.append(x, next_px)
+        y = numpy.append(y, next_py)
+        last_x = x[-1]
+        last_y = y[-1]
+        next_x = numpy.array([last_x, last_x + 1, last_x + 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
+        next_y = numpy.array([last_y - 1, last_y - 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
+        next_x = (next_x >= 0) * next_x
+        next_y = (next_y >= 0) * next_y
+        #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
+        #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
         i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
         next_px = next_x[i_next]
         next_py = next_y[i_next]
