@@ -20,7 +20,7 @@ def snn(xmax, ymax, rmax):
     # Equation parameters
     tau = 500 * brian2.ms 
     v0 = 1 * brian2.mvolt
-    vth = 20*v0 #potential threshold
+    vth = 30*v0 #potential threshold
     eqs = '''
     dv/dt = -(v0/tau)*sign(v) : volt (unless refractory)
     x : 1
@@ -77,7 +77,7 @@ def link_event_to_snn(events, snn):
     
     synapses = brian2.Synapses(events, snn, model='v_update : volt', on_pre='v += v_update')
     
-    for index in range(len(indices)):
+    for index in range(0, len(indices), 1):
         for r in range(1, rmax+1, 5):
             x0 = xc[index]
             y0 = yc[index]

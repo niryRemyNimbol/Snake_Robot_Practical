@@ -50,7 +50,8 @@ dvsSignalArray = vrep.simxUnpackInts(dvsSignal)
 dvsEventsList = numpy.reshape(dvsSignalArray, [int(len(dvsSignalArray)/4), 4]).T
 
 # Create the spiking neural network for circle detection and the event generator and link them
-nn = snn.snn(32, 32, 16)
+#nn = snn.snn(32, 32, 16)
+nn = snn.snn(64, 64, 32)
 events, times, indices = snn.events_generator(nn, dvsEventsList)
 s = snn.link_event_to_snn(events, nn)
 
