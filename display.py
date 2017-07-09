@@ -36,14 +36,19 @@ def reconstruct_image(dvsEventsList, t):
     return im
     
 # Function to draw the detected circle on the DVS image
-def draw_circle(im, index):
+def draw_circle(im, indexes):
     # Compute x, y, r
     xmax, ymax, channel = im.shape
     rmax = min(xmax, ymax)//2
-    r = (index+1)%rmax
-    xyindex = (index+1)//rmax
-    x = xyindex%xmax
-    y = xyindex//xmax
+    all_r = numpy.array([(r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))+(x-r) for r in range(1,rmax+1)])
+    centers = []
+    for i in indexes:
+        r = numpy.argmin(numpy.array([x for x in i-all_r if x>=0]))+1
+        offset = (r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))
+        xy = i-offset
+        x = xy//(ymax-2*r)+r
+        y = xy%(ymax-2*r)+r
+        centers.append((x,y,r))
     # Create a figure. Equal aspect so circles look circular
     fig,ax = plt.subplots(1)
     ax.set_aspect('equal')
@@ -52,8 +57,9 @@ def draw_circle(im, index):
     ax.imshow(numpy.uint16(im))
 
     # Now, loop through coord arrays, and create a circle at each x,y pair
-    circ = Circle((x, y), r, color='g', fill=False)
-    ax.add_patch(circ) 
+    for k in centers: 
+        circ = Circle((k[0], k[1]), k[2], color='g', fill=False)
+        ax.add_patch(circ) 
 
     # Show the image
     plt.show()

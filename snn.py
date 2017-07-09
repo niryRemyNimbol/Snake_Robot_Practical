@@ -12,11 +12,12 @@ import numpy
 
 # Function to create the neurons
 # takes as input the length and height of the dvs image (xmax, ymax) and the maximal radius (rmax)
-# neurons are in a list: to access the neuron (x, y, r) one calls the (rmax*x + rmax*xmax*y + r - 1)th neuron
+# neurons are in a list: to access the neuron (x, y, r) one calls 
+# the ((r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))+(x-r)*(ymax-2*r)+(y-r))th neuron
 
 def snn(xmax, ymax, rmax):
     # Neuron parameters
-    N = xmax * ymax * rmax #size
+    N = rmax * (xmax*ymax + (rmax+1)*(4*rmax+2)//3 - (rmax+1)*(xmax+ymax)) #size
     # Equation parameters
     tau = 500 * brian2.ms 
     v0 = 1 * brian2.mvolt
@@ -37,9 +38,9 @@ def snn(xmax, ymax, rmax):
     # Network creation
     snn = brian2.NeuronGroup(N, eqs, threshold=condition, reset=update, refractory = duration, method='euler')
     # Parameters initiation
-    snn.x = numpy.arange(0, xmax, 1).repeat(ymax*rmax)
-    snn.y = numpy.arange(0, ymax, 1).repeat(xmax*rmax).reshape((xmax*rmax, ymax)).flatten('F')
-    snn.r = numpy.arange(1, rmax+1, 1).repeat(xmax*ymax).reshape(rmax, xmax*ymax).flatten('F')
+    snn.x = numpy.concatenate([numpy.arange(k,xmax-k).repeat(ymax-2*k) for k in numpy.arange(1,rmax)])
+    snn.y = numpy.concatenate([numpy.arange(k,ymax-k).repeat(xmax-2*k).reshape((xmax-2*k,ymax-2*k)).flatten('F') for k in numpy.arange(1,rmax)])
+    snn.r = numpy.concatenate([k*numpy.ones(((xmax-2*k)*(ymax-2*k),1),dtype=int) for k in numpy.arange(1,rmax)]).T[0]
     L = len(snn.x)
     snn.v0 = v0 * numpy.ones((1,L))
     snn.tau = tau * numpy.ones((1,L))
@@ -51,15 +52,16 @@ def snn(xmax, ymax, rmax):
 # takes as parameters a DVS event list and the neural network that will be fed with those events
 
 def events_generator(snn, dvsEventsList):
-    xmax = int(numpy.max(snn.x) + 1)
-    ymax = int(numpy.max(snn.y) + 1)
+    xmax = int(numpy.max(snn.x)+2)
+    ymax = int(numpy.max(snn.y)+2)
 
     times = dvsEventsList[0] * brian2.ms
     
     indices = dvsEventsList[1] + xmax * dvsEventsList[2]
-    
+    #print(indices)
+
     N = xmax * ymax
-    
+    #print(N)
     return brian2.SpikeGeneratorGroup(N, indices, times), times, indices
 
 # Function to link the event generator with the neural network
@@ -84,7 +86,7 @@ def link_event_to_snn(events, snn):
             if(x0+r<xmax and x0-r>=0 and y0+r<ymax and y0-r>=0):
                 x, y = solve_centers(x0 ,y0 , r)
                 #print(rmax*x+xmax*rmax*y+r-1)
-                synapses.connect(i=index, j=rmax*x+xmax*rmax*y+r-1)
+                synapses.connect(i=index, j=(r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))+(x-r)*(ymax-2*r)+(y-r))
                 #print(x, y, xc[index], yc[index], r)
     N = len(synapses)
     synapses.v_update = v_update * numpy.ones((1, N))
