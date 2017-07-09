@@ -39,15 +39,13 @@ def reconstruct_image(dvsEventsList, t):
 def draw_circle(im, indexes):
     # Compute x, y, r
     xmax, ymax, channel = im.shape
-    rmax = min(xmax, ymax)//2
-    all_r = numpy.array([(r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))+(x-r) for r in range(1,rmax+1)])
+    #rmax = min(xmax, ymax)//2
     centers = []
     for i in indexes:
-        r = numpy.argmin(numpy.array([x for x in i-all_r if x>=0]))+1
-        offset = (r-1)*(xmax*ymax+r*(4*(r-1)+2)//3-r*(xmax+ymax))
-        xy = i-offset
-        x = xy//(ymax-2*r)+r
-        y = xy%(ymax-2*r)+r
+        r = i//(xmax*ymax) + 1
+        xy = i%(xmax*ymax)
+        x = xy//ymax
+        y = xy%ymax
         centers.append((x,y,r))
     # Create a figure. Equal aspect so circles look circular
     fig,ax = plt.subplots(1)

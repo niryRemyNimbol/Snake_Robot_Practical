@@ -68,3 +68,8 @@ network.run(1000*brian2.ms)
 spikes_n = numpy.array(SpikeM2.i)
 #spikes_e = numpy.array(SpikeM1.i)
 t = numpy.array(SpikeM2.t)
+
+# Display results
+for tm in t:
+    im=display.reconstruct_image(dvsEventsList,int(1000*tm))
+    display.draw_circle(im,spikes_n[t==tm])
