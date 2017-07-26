@@ -28,7 +28,7 @@ class SNN(object):
         
     def update_func(self):
         time = int(brian2.defaultclock.t/brian2.ms)
-        print(time)
+        #print(time)
         
         M, N = self.dvsSignal.shape
         events = self.dvsSignal[((self.dvsSignal[0,:] <= time) * (self.dvsSignal[0,:] > time - 100)).repeat(4).reshape((N, 4)).T]
@@ -44,7 +44,7 @@ class SNN(object):
                     x, y = snn.solve_centers(x0, y0, r, self.xmax, self.ymax)
                     self.group.v[(r//4-1)*self.xmax*self.ymax+x*self.ymax+y] += self.v_update
         fire = int(numpy.argmax(self.group.v))
-        print(self.group.v[fire]/brian2.mvolt, fire)
+        #print(self.group.v[fire]/brian2.mvolt, fire)
         if self.group.v[fire]/brian2.mvolt >= 10.0:
             self.group.v = 0 * self.group.v
             self.group.v[fire] = 501*brian2.mvolt

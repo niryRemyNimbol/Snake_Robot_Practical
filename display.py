@@ -17,7 +17,7 @@ import brian2
 def reconstruct_image(dvsEventsList, t):
     # Get events for time t
     M, N = dvsEventsList.shape
-    events = dvsEventsList[(dvsEventsList[0,:] == t).repeat(4).reshape((N, 4)).T]
+    events = dvsEventsList[(numpy.round(dvsEventsList[0,:]/10)*10 == t).repeat(4).reshape((N, 4)).T]
     events = events.reshape((4, int(len(events)/4)))
     
     # Create gray image
@@ -42,7 +42,7 @@ def draw_circle(im, indexes):
     #rmax = min(xmax, ymax)//2
     centers = []
     for i in indexes:
-        r = i//(xmax*ymax) + 1
+        r = 4*(i//(xmax*ymax) + 1)
         xy = i%(xmax*ymax)
         x = xy//ymax
         y = xy%ymax
@@ -56,7 +56,7 @@ def draw_circle(im, indexes):
 
     # Now, loop through coord arrays, and create a circle at each x,y pair
     for k in centers: 
-        circ = Circle((k[0], k[1]), k[2], color='g', fill=False)
+        circ = Circle((k[1], k[0]), k[2], color='g', fill=False)
         ax.add_patch(circ) 
 
     # Show the image
