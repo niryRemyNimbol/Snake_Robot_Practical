@@ -10,11 +10,12 @@ import vrep
 import sys
 import time
 import numpy
-import snn
+#import snn
 import snn2
 import brian2
 import matplotlib.pyplot as plt
 import display
+import IPython
 
 # Build network
 #nn = snn.snn(64, 64, 32)
@@ -49,14 +50,19 @@ vrep.simxSynchronous(clientID, True)
 #errorCode, dvsSignal = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_opmode_buffer)
 #dvsSignalArray = vrep.simxUnpackInts(dvsSignal)
 vrep.simxStartSimulation(clientID, vrep.simx_opmode_oneshot)
+
 # Get events from DVS camera
 errorCode, signalValue = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_opmode_streaming)
 time.sleep(0.01)
 
+# Synchronize and get DVS data
 vrep.simxSynchronousTrigger(clientID)
 errorCode, dvsSignal = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_opmode_buffer)
 dvsSignalArray = vrep.simxUnpackInts(dvsSignal)
 dvsEventsList = numpy.reshape(dvsSignalArray, [int(len(dvsSignalArray)/4), 4]).T
+
+#Prepare figure to display the results
+fig = plt.figure()
 while(True):
     print('Receiving DVS data ...\n')
     errorCode, dvsSignal = vrep.simxReadStringStream(clientID, 'dvsData', vrep.simx_opmode_buffer)
@@ -89,13 +95,22 @@ while(True):
 
     print('Running network ...\n')
     network.update_dvsSignal(dvsEventsList)
-    network.run(149*brian2.ms)
+    network.run(150*brian2.ms)
 
     t, spikes_n = network.spikes()
 # Display results
     print('frame at time:', t[-1], ' seconds')
-    im=display.reconstruct_image(dvsEventsList,int(1000*t[-1]))
-    display.draw_circle(im,spikes_n[t==t[-1]])
+    fig.clear()
+    ax = fig.add_subplot(111)
+    #display.display(plt.gcf()) 
+    im = display.reconstruct_image(dvsEventsList,int(1000*t[-1]))
+    circle = display.draw_circle(im,spikes_n[t==t[-1]])
+    
+    ax.imshow(im)
+    plt.gcf().gca().add_artist(circle)
+    IPython.display.clear_output(wait=True)
+    IPython.display.clear_output(wait=True)
+    IPython.display.display(plt.gcf())
     
     vrep.simxStartSimulation(clientID, vrep.simx_opmode_oneshot)
     vrep.simxSynchronousTrigger(clientID)

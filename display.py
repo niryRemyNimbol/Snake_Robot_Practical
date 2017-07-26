@@ -48,19 +48,20 @@ def draw_circle(im, indexes):
         y = xy%ymax
         centers.append((x,y,r))
     # Create a figure. Equal aspect so circles look circular
-    fig,ax = plt.subplots(1)
-    ax.set_aspect('equal')
+    #fig,ax = plt.subplots(1)
+    #ax.set_aspect('equal')
 
     # Show the image
-    ax.imshow(numpy.uint16(im))
+    #ax.imshow(numpy.uint16(im))
 
     # Now, loop through coord arrays, and create a circle at each x,y pair
     for k in centers: 
         circ = Circle((k[1], k[0]), k[2], color='g', fill=False)
-        ax.add_patch(circ) 
+        #ax.add_patch(circ) 
 
     # Show the image
-    plt.show()
+    #plt.show()
+    return circ
     
 # Function to display firing neurons
 def display_spikes(spike_monitor):
