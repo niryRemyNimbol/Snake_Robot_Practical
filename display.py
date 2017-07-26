@@ -21,8 +21,8 @@ def reconstruct_image(dvsEventsList, t):
     events = events.reshape((4, int(len(events)/4)))
     
     # Create gray image
-    xmax = max(dvsEventsList[1])+1
-    ymax = max(dvsEventsList[2])+1
+    xmax = 64#max(dvsEventsList[1])+1
+    ymax = 64#max(dvsEventsList[2])+1
     im = 127*numpy.ones((xmax,ymax,3))
     im = numpy.uint16(im)
     

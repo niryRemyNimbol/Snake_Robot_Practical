@@ -112,6 +112,10 @@ while(True):
     IPython.display.clear_output(wait=True)
     IPython.display.display(plt.gcf())
     
+    # Save image (uncomment the next 2 lines to save the images)
+    #title = '../results_2/result_t' + str(t[-1]) + '.png'
+    #fig.savefig(title)
+    
     vrep.simxStartSimulation(clientID, vrep.simx_opmode_oneshot)
     vrep.simxSynchronousTrigger(clientID)
 
