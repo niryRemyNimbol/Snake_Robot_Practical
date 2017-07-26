@@ -19,7 +19,7 @@ def snn(xmax, ymax, rmax):
     # Neuron parameters
     N = (rmax//4-1)*xmax*ymax #size
     # Equation parameters
-    tau = 1000 * brian2.ms 
+    tau = 100 * brian2.ms 
     v0 = 1 * brian2.mvolt
     vth = 500*v0 #potential threshold
     eqs = '''
@@ -34,7 +34,7 @@ def snn(xmax, ymax, rmax):
     #equations
     condition = 'v > vth'
     update = 'v = 0*v0' #reset rule
-    duration = 500 * tau #refractory period
+    duration = tau #refractory period
     
     # Network creation
     snn = brian2.NeuronGroup(N, eqs, threshold=condition, reset=update, refractory = duration, method='euler')
