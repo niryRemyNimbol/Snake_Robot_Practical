@@ -17,7 +17,7 @@ import numpy
 
 def snn(xmax, ymax, rmax):
     # Neuron parameters
-    N = (rmax//4-1)*xmax*ymax #size
+    N = (rmax//2)*xmax*ymax #size
     # Equation parameters
     tau = 100 * brian2.ms 
     v0 = 1 * brian2.mvolt
@@ -39,9 +39,9 @@ def snn(xmax, ymax, rmax):
     # Network creation
     snn = brian2.NeuronGroup(N, eqs, threshold=condition, reset=update, refractory = duration, method='euler')
     # Parameters initiation
-    snn.x = numpy.concatenate([numpy.arange(0,xmax).repeat(ymax) for k in numpy.arange(4,rmax,4)])
-    snn.y = numpy.concatenate([numpy.arange(0,ymax).repeat(xmax).reshape((xmax,ymax)).flatten('F') for k in numpy.arange(4,rmax,4)])
-    snn.r = numpy.concatenate([k*numpy.ones((xmax*ymax,1),dtype=int) for k in numpy.arange(4,rmax,4)]).T[0]
+    snn.x = numpy.concatenate([numpy.arange(0,xmax).repeat(ymax) for k in numpy.arange(2,rmax+1,2)])
+    snn.y = numpy.concatenate([numpy.arange(0,ymax).repeat(xmax).reshape((xmax,ymax)).flatten('F') for k in numpy.arange(2,rmax+1,2)])
+    snn.r = numpy.concatenate([k*numpy.ones((xmax*ymax,1),dtype=int) for k in numpy.arange(2,rmax+1,2)]).T[0]
     L = len(snn.x)
     snn.v0 = v0 * numpy.ones((1,L))
     snn.tau = tau * numpy.ones((1,L))

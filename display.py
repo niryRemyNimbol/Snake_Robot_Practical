@@ -29,9 +29,9 @@ def reconstruct_image(dvsEventsList, t):
     # Add events to the gray image
     for event in events.T:
         if event[3]==1:
-            im[event[1],event[2],:]=numpy.ones((1,1,3))
+            im[ymax-event[2]-1,event[1],:]=numpy.ones((1,1,3))
         else:
-            im[event[1],event[2],:]=255*numpy.ones((1,1,3))
+            im[ymax-event[2]-1,event[1],:]=255*numpy.ones((1,1,3))
     
     return im
     
@@ -42,11 +42,11 @@ def draw_circle(im, indexes):
     #rmax = min(xmax, ymax)//2
     centers = []
     for i in indexes:
-        r = 4*(i//(xmax*ymax) + 1)
+        r = 2*(i//(xmax*ymax) + 1)
         xy = i%(xmax*ymax)
         x = xy//ymax
         y = xy%ymax
-        centers.append((x,y,r))
+        centers.append((x,ymax-y-1,r))
     # Create a figure. Equal aspect so circles look circular
     #fig,ax = plt.subplots(1)
     #ax.set_aspect('equal')
@@ -56,7 +56,7 @@ def draw_circle(im, indexes):
 
     # Now, loop through coord arrays, and create a circle at each x,y pair
     for k in centers: 
-        circ = Circle((k[1], k[0]), k[2], color='g', fill=False)
+        circ = Circle((k[0], k[1]), k[2], color='g', fill=False)
         #ax.add_patch(circ) 
 
     # Show the image

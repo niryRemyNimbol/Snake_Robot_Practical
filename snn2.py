@@ -39,13 +39,13 @@ class SNN(object):
         for e in events.T:
             x0 = e[1]
             y0 = e[2]
-            for r in range(4, self.rmax, 4):
-                if(x0+r<self.xmax and x0-r>=0 and y0+r<self.ymax and y0-r>=0):
+            for r in range(2, self.rmax+1, 2):
+                if(x0+r<self.xmax and x0-r>0and y0+r<self.ymax and y0-r>0):
                     x, y = snn.solve_centers(x0, y0, r, self.xmax, self.ymax)
-                    self.group.v[(r//4-1)*self.xmax*self.ymax+x*self.ymax+y] += self.v_update
+                    self.group.v[(r//2-1)*self.xmax*self.ymax+x*self.ymax+y] += self.v_update
         fire = int(numpy.argmax(self.group.v))
         #print(self.group.v[fire]/brian2.mvolt, fire)
-        if self.group.v[fire]/brian2.mvolt >= 10.0:
+        if self.group.v[fire]/brian2.mvolt >= 15.0:
             self.group.v = 0 * self.group.v
             self.group.v[fire] = 501*brian2.mvolt
         

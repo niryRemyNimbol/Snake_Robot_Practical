@@ -99,20 +99,22 @@ while(True):
 
     t, spikes_n = network.spikes()
 # Display results
-    print('frame at time:', t[-1], ' seconds')
-    fig.clear()
-    ax = fig.add_subplot(111)
+    if len(t)>0:
+        print('frame at time:', t[-1], ' seconds')
+        fig.clear()
+        ax = fig.add_subplot(111)
     #display.display(plt.gcf()) 
-    im = display.reconstruct_image(dvsEventsList,int(1000*t[-1]))
-    circle = display.draw_circle(im,spikes_n[t==t[-1]])
+        im = display.reconstruct_image(dvsEventsList,int(1000*t[-1]))
+        circle = display.draw_circle(im,spikes_n[t==t[-1]])
     
-    ax.imshow(im)
-    plt.gcf().gca().add_artist(circle)
-    IPython.display.clear_output(wait=True)
-    IPython.display.clear_output(wait=True)
-    IPython.display.display(plt.gcf())
+        ax.imshow(im)
+        plt.gcf().gca().add_artist(circle)
+        IPython.display.clear_output(wait=True)
+        IPython.display.clear_output(wait=True)
+        IPython.display.display(plt.gcf())
     
     # Save image (uncomment the next 2 lines to save the images)
+    #title = '../results/result_t' + str(t[-1]) + '.png'
     #title = '../results_2/result_t' + str(t[-1]) + '.png'
     #fig.savefig(title)
     
