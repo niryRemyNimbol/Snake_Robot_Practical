@@ -29,9 +29,9 @@ def reconstruct_image(dvsEventsList, t):
     # Add events to the gray image
     for event in events.T:
         if event[3]==1:
-            im[ymax-event[2]-1,event[1],:]=numpy.ones((1,1,3))
+            im[int(ymax-event[2]-1),int(event[1]),:]=numpy.ones((1,1,3))
         else:
-            im[ymax-event[2]-1,event[1],:]=255*numpy.ones((1,1,3))
+            im[int(ymax-event[2]-1),int(event[1]),:]=255*numpy.ones((1,1,3))
     
     return im
     

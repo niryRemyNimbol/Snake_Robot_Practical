@@ -110,10 +110,10 @@ def solve_centers(xc, yc, r, xmax, ymax):
         last_y = y[-1]
         next_x = numpy.array([last_x, last_x - 1, last_x - 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
         next_y = numpy.array([last_y - 1, last_y - 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
-        next_x = (next_x >= 0) * next_x
-        next_x = (next_x < xmax) * next_x
-        next_y = (next_y >= 0) * next_y
-        next_y = (next_y < ymax) * next_y
+        #next_x = (next_x >= 0) * next_x
+        #next_x = (next_x < xmax) * next_x
+        #next_y = (next_y >= 0) * next_y
+        #next_y = (next_y < ymax) * next_y
         #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
         #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
         i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
@@ -126,10 +126,10 @@ def solve_centers(xc, yc, r, xmax, ymax):
         last_y = y[-1]
         next_x = numpy.array([last_x, last_x - 1, last_x - 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
         next_y = numpy.array([last_y + 1, last_y + 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
-        next_x = (next_x >= 0) * next_x
-        next_x = (next_x < xmax) * next_x
-        next_y = (next_y >= 0) * next_y
-        next_y = (next_y < ymax) * next_y
+        #next_x = (next_x >= 0) * next_x
+        #next_x = (next_x < xmax) * next_x
+        #next_y = (next_y >= 0) * next_y
+        #next_y = (next_y < ymax) * next_y
         #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
         #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
         i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
@@ -142,10 +142,10 @@ def solve_centers(xc, yc, r, xmax, ymax):
         last_y = y[-1]
         next_x = numpy.array([last_x, last_x + 1, last_x + 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
         next_y = numpy.array([last_y + 1, last_y + 1, last_y])#, last_y - 1,last_y + 1, last_y + 1, last_y , last_y + 1])
-        next_x = (next_x >= 0) * next_x
-        next_x = (next_x < xmax) * next_x
-        next_y = (next_y >= 0) * next_y
-        next_y = (next_y < ymax) * next_y
+        #next_x = (next_x >= 0) * next_x
+        #next_x = (next_x < xmax) * next_x
+        #next_y = (next_y >= 0) * next_y
+        #next_y = (next_y < ymax) * next_y
         #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
         #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
         i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))
@@ -158,10 +158,10 @@ def solve_centers(xc, yc, r, xmax, ymax):
         last_y = y[-1]
         next_x = numpy.array([last_x, last_x + 1, last_x + 1])#, last_x + 1, last_x, last_x - 1, last_x - 1, last_x - 1])
         next_y = numpy.array([last_y - 1, last_y - 1, last_y])
-        next_x = (next_x >= 0) * next_x
-        next_x = (next_x < xmax) * next_x
-        next_y = (next_y >= 0) * next_y
-        next_y = (next_y < ymax) * next_y
+        #next_x = (next_x >= 0) * next_x
+        #next_x = (next_x < xmax) * next_x
+        #next_y = (next_y >= 0) * next_y
+        #next_y = (next_y < ymax) * next_y
         #next_x = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_x
         #next_y = (numpy.array([next_x[k] != x[-1] or next_y[k] != y[-1] for k in range(8)])) * next_y
         i_next = numpy.argmin(abs((next_x - xc)**2 + (next_y - yc)**2 - r**2))

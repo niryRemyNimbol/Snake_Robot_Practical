@@ -14,6 +14,7 @@ class SNN(object):
         self.xmax = xmax
         self.ymax = ymax
         self.rmax = rmax
+        #self.rmin = 2
         self.dvsSignal = dvsSignal
         self.v_update = 0.5 * brian2.mvolt
         
@@ -37,17 +38,30 @@ class SNN(object):
          #   print(events[:,0])
         
         for e in events.T:
-            x0 = e[1]
-            y0 = e[2]
-            for r in range(2, self.rmax+1, 2):
-                if(x0+r<self.xmax and x0-r>0and y0+r<self.ymax and y0-r>0):
-                    x, y = snn.solve_centers(x0, y0, r, self.xmax, self.ymax)
+            x0 = int(e[1])
+            y0 = int(e[2])
+            for r in range(2, self.rmax, 2):
+                if(x0+r<self.xmax or x0-r>0 or y0+r<self.ymax or y0-r>0):
+                    x, y = snn.solve_centers(int((self.xmax-1)/2), int((self.ymax-1)/2), r, self.xmax, self.ymax)
+                    x = x + (x0 - int((self.xmax-1)/2))
+                    y = y + (y0 - int((self.ymax-1)/2))
+                    y = y[x>=0]
+                    x = x[x>=0]
+                    y = y[x<self.xmax]
+                    x = x[x<self.xmax]
+                    x = x[y>=0]
+                    y = y[y>=0]
+                    x = x[y<self.ymax]
+                    y = y[y<self.ymax]
                     self.group.v[(r//2-1)*self.xmax*self.ymax+x*self.ymax+y] += self.v_update
         fire = int(numpy.argmax(self.group.v))
         #print(self.group.v[fire]/brian2.mvolt, fire)
         if self.group.v[fire]/brian2.mvolt >= 15.0:
             self.group.v = 0 * self.group.v
             self.group.v[fire] = 501*brian2.mvolt
+            #self.rmin = 2*(fire//(self.xmax*self.ymax) + 1)
+        #else:
+         #   self.rmin = 2
         
     
     def spikes(self):
